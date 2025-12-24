@@ -44,7 +44,7 @@ export const SidebarFooter = ({ onSave }: { onSave: () => void }) => {
                 {getButtonText()}
             </button>
 
-            <a href="http://localhost:5173/widget" target="_blank" rel="noopener noreferrer"
+            <a href="/index.html?mode=widget" target="_blank" rel="noopener noreferrer"
                 className="flex items-center justify-center w-full h-[40px] mt-3 font-semibold rounded text-white bg-[#525252] hover:bg-[#666666] transition-colors"
                 style={{ textDecoration: 'none' }}>
                 Go to widget {'->'}
