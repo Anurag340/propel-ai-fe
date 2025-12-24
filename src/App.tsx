@@ -11,8 +11,11 @@ const App = () => {
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
-  // Simple routing logic
-  if (route === '/widget') {
+  // Simple routing logic checking path or query param
+  const searchParams = new URLSearchParams(window.location.search);
+  const mode = searchParams.get('mode');
+
+  if (route === '/widget' || mode === 'widget') {
     return <Widget />;
   }
 
