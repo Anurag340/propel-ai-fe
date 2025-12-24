@@ -1,0 +1,1541 @@
+@import "tailwindcss";
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* Global Extension Layout Reset */
+html,
+body,
+#extension-root {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  /* Prevent body scroll, handle inside components */
+}
+
+/* Custom Scrollbar for Extension */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #2d2d2d;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #4a4a4a;
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #5a5a5a;
+}
+
+
+/* Theme variables */
+:root {
+  --light-svg-color: #4b5563;
+  /* slate-600 */
+  --dark-svg-color: #ffffffd2;
+  /* white */
+}
+
+/* Scope overrides when response window theme is applied */
+.response-window-light {
+  --light-svg-color: #4b5563;
+}
+
+.response-window-dark {
+  --dark-svg-color: #ffffffd2;
+}
+
+* {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* Animations */
+@keyframes pulse {
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-40px) scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes bellShake {
+
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+
+  10% {
+    transform: rotate(-10deg);
+  }
+
+  20% {
+    transform: rotate(10deg);
+  }
+
+  30% {
+    transform: rotate(-8deg);
+  }
+
+  40% {
+    transform: rotate(8deg);
+  }
+
+  50% {
+    transform: rotate(-6deg);
+  }
+
+  60% {
+    transform: rotate(6deg);
+  }
+
+  70% {
+    transform: rotate(-4deg);
+  }
+
+  80% {
+    transform: rotate(4deg);
+  }
+
+  90% {
+    transform: rotate(-2deg);
+  }
+}
+
+/* Question Item Hover Effect - Uses CSS Variable set by component config */
+.question-item:hover {
+  background-color: var(--suggested-hover-bg, rgba(0, 0, 0, 0.05)) !important;
+}
+
+/* Utility Classes */
+.hidden {
+  display: none !important;
+}
+
+.fade-in {
+  animation: fadeIn 0.2s ease-in;
+}
+
+/* Smooth streaming response animation */
+.response-content {
+  opacity: 0;
+  animation: slideInUp 0.5s ease-out forwards;
+}
+
+.response-content .streaming-text {
+  will-change: contents;
+}
+
+/* Response Window Content Styling (Restoring list styles reset by Tailwind & applying typography) */
+.answer-content h1 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 1.5rem 0 1rem 0;
+  color: #1e293b;
+  line-height: 1.3;
+}
+
+.answer-content h2 {
+  font-size: 1.05rem;
+  font-weight: 550;
+  margin: 1.5rem 0 1rem 0;
+  color: #1e293b;
+  line-height: 1.3;
+}
+
+.answer-content h3 {
+  font-size: 0.88rem;
+  font-weight: 550;
+  margin: 1.25rem 0 0.75rem 0;
+  color: #374151;
+  line-height: 1.4;
+}
+
+.answer-content p {
+  margin: 0.7rem 0;
+  line-height: 1.7;
+  color: #475569;
+  font-size: 0.875rem;
+}
+
+.answer-content ul {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+  margin: 0.7rem 0;
+  font-size: 0.875rem;
+}
+
+.answer-content ol {
+  list-style-type: decimal;
+  padding-left: 1.5rem;
+  margin: 0.7rem 0;
+  font-size: 0.875rem;
+}
+
+.answer-content li {
+  margin: 0.5rem 0;
+  line-height: 1.6;
+  color: #475569;
+  font-size: 0.875rem;
+}
+
+.answer-content strong {
+  font-weight: 600;
+  /* Adjusted from 300 to be more visible as bold */
+  color: #1e293b;
+}
+
+/* Dark Mode Typography Overrides for Answer Content */
+.response-window-dark .answer-content h1,
+.response-window-dark .answer-content h2,
+.response-window-dark .answer-content h3 {
+  color: #f8fafc;
+}
+
+.response-window-dark .answer-content p,
+.response-window-dark .answer-content li {
+  color: #e2e8f0;
+}
+
+.response-window-dark .answer-content strong {
+  color: #f1f5f9;
+}
+
+.opacity-0 {
+  opacity: 0 !important;
+}
+
+.hot-questions-transition {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.slide-up {
+  animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.slide-down {
+  animation: slideDown 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.bell-shake {
+  animation: bellShake 0.8s ease-in-out;
+}
+
+.typing-dot {
+  animation: typing 1.4s infinite;
+}
+
+.typing-dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.typing-dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+/* Debug: Make sure sections are visible when not hidden */
+#responseRelatedContent:not(.hidden) {
+  display: block !important;
+}
+
+#responseRelatedQuestions:not(.hidden) {
+  display: block !important;
+}
+
+#responseBookSession:not(.hidden) {
+  display: flex !important;
+}
+
+/* Input Container Styles */
+.input-container {
+  transition: all 0.3s ease;
+  width: 640px;
+  padding: 8px;
+  border-radius: 4px;
+  display: inline-flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Collapsed capsule state (initial) */
+.input-container.input-collapsed {
+  width: 260px !important;
+  border-radius: 9999px !important;
+  padding: 6px !important;
+  transition: width 220ms cubic-bezier(0.4, 0, 0.2, 1), border-radius 220ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Expanded state */
+.input-container.input-expanded {
+  width: 640px !important;
+  transition: width 220ms cubic-bezier(0.4, 0, 0.2, 1), border-radius 400ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Compact internals when collapsed */
+.input-container.input-collapsed .input-content {
+  width: 170px !important;
+  gap: 6px !important;
+}
+
+.input-container.input-collapsed .input-icon svg {
+  width: 14px !important;
+  height: 14px !important;
+}
+
+.input-container.input-collapsed .input-text {
+  font-size: 14px !important;
+  text-overflow: ellipsis;
+}
+
+.input-container.input-collapsed .input-text::placeholder {
+  font-size: 14px !important;
+}
+
+.input-container.input-collapsed #notifyButton svg {
+  width: 20px !important;
+  height: 20px !important;
+}
+
+.input-container.input-collapsed .input-button svg {
+  width: 12px !important;
+  height: 12px !important;
+}
+
+/* Make send button fully rounded in collapsed state */
+.input-container.input-collapsed .input-button {
+  border-radius: 9999px !important;
+}
+
+/* Force input bar icon colors by variant (override !important elsewhere) */
+.input-container.input-light .input-icon svg {
+  color: #e5e6e7 !important;
+}
+
+.input-container.input-dark .input-icon svg {
+  color: var(--dark-svg-color) !important;
+}
+
+.input-container.input-light #notifyButton svg {
+  color: var(--light-svg-color) !important;
+}
+
+.input-container.input-dark #notifyButton svg {
+  color: var(--dark-svg-color) !important;
+}
+
+.input-container.input-light #sendButton svg {
+  color: #ffffff !important;
+}
+
+.input-container.input-dark #sendButton svg {
+  color: var(--dark-svg-color) !important;
+}
+
+.input-dark,
+.input-light {
+  box-shadow: 0 10px 60px rgba(62, 36, 135, .5);
+  outline: 1px solid #8b5cf6;
+}
+
+.input-dark .input-content,
+.input-light .input-content {
+  width: 480px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.input-dark .input-icon,
+.input-light .input-icon {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+}
+
+.input-dark .input-icon svg,
+.input-light .input-icon svg {
+  width: 28px;
+  height: 28px;
+  max-width: none;
+  max-height: none;
+}
+
+.input-dark .input-text,
+.input-light .input-text {
+  flex: 1;
+  font-size: 20px;
+  font-weight: 400;
+  font-family: 'Geist', system-ui, sans-serif;
+}
+
+.input-dark .input-button,
+.input-light .input-button {
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.input-dark .input-button svg,
+.input-light .input-button svg {
+  width: 14px;
+  height: 14px;
+  fill: #fff;
+}
+
+/* Input Dark Variant */
+.input-dark {
+  background-image: url('/assets/inputbar-gradient.webp');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  box-shadow: 20px 10px 60px rgba(62, 36, 135, .6), -12px 4px 20px rgba(85, 22, 84, .3);
+  outline-color: #581c87;
+  --dark-svg-color: #fff;
+}
+
+.input-dark .input-text,
+.input-dark .input-icon svg path,
+.input-dark .input-icon svg {
+  color: var(--dark-svg-color);
+  fill: var(--dark-svg-color);
+}
+
+.input-dark .input-button {
+  background: linear-gradient(to top right, rgba(255, 255, 255, .35), rgba(0, 0, 0, .2));
+}
+
+/* Input Light Variant */
+.input-light {
+  background: #fff;
+  outline-color: #8b5cf6;
+  --light-svg-color: #4b5563;
+}
+
+.input-light .input-icon svg path {
+  fill: var(--light-svg-color);
+}
+
+/* Notification button SVG colors */
+.input-light #notifyButton svg {
+  color: #5e6063;
+}
+
+.input-dark #notifyButton svg {
+  color: #d1d5db;
+}
+
+/* Light variant SVG colors for all buttons */
+.input-light .close-button svg {
+  color: var(--light-svg-color) !important;
+}
+
+;
+
+.input-light #minimizeResponseWindow svg {
+  color: var(--light-svg-color) !important;
+}
+
+/* Dark variant SVG colors for all buttons */
+.input-dark .close-button svg {
+  color: var(--dark-svg-color) !important;
+}
+
+;
+
+.input-dark #minimizeResponseWindow svg {
+  color: var(--dark-svg-color) !important;
+}
+
+.input-light .input-text {
+  color: #4b5563 !important;
+}
+
+.input-light .input-text::placeholder {
+  color: var(--placeholder-color, rgba(75, 85, 99, 0.7));
+}
+
+.input-dark .input-text::placeholder {
+  color: var(--placeholder-color, rgba(156, 163, 175, 1));
+}
+
+.input-light .input-button {
+  background-image: url('/assets/inputbutton-gradient.webp');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Response Window Styles */
+.response-window-dark,
+.response-window-light {
+  transition: all 0.3s ease;
+  color: #f1f5f9;
+}
+
+.response-window-dark {
+  background: rgba(0, 0, 0, .8);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  box-shadow: 20px 10px 60px rgba(62, 36, 135, .6), -12px 4px 20px rgba(85, 22, 84, .3);
+}
+
+.response-window-light {
+  background: rgba(255, 255, 255, .95);
+  color: #374151;
+}
+
+.response-window-light .response-container {
+  background: rgba(255, 255, 255, .98);
+}
+
+/* Response Header Border Styles */
+.response-window-light .response-header {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+.response-window-dark .response-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Responsive styles for response header */
+@media (min-width: 640px) {
+  .response-header {
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
+    padding-left: 2rem !important;
+    padding-right: 2rem !important;
+  }
+
+  .response-header>div {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    min-width: 0 !important;
+  }
+
+  .response-question {
+    font-size: 1.05rem !important;
+    line-height: 1.25rem !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+    min-width: 0 !important;
+    max-width: calc(100% - 120px) !important;
+    flex: 1 1 0% !important;
+  }
+}
+
+/* Close Button Styles */
+.close-button {
+  background-color: transparent !important;
+  cursor: pointer;
+  border: none;
+  outline: none;
+}
+
+/* Light variant hover for close button - only SVG scales */
+.response-window-light .close-button:hover {
+  background-color: transparent !important;
+}
+
+.response-window-light .close-button:hover svg {
+  color: black !important;
+  transform: scale(1.1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Dark variant hover for close button - only SVG scales and brightens */
+.response-window-dark .close-button:hover {
+  background-color: transparent !important;
+}
+
+.response-window-dark .close-button:hover svg {
+  transform: scale(1.1);
+  color: white !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Minimize Button Styles */
+#minimizeResponseWindow {
+  background-color: transparent !important;
+  cursor: pointer;
+  border: none;
+  outline: none;
+}
+
+/* Light variant hover for minimize button - only SVG scales */
+.response-window-light #minimizeResponseWindow:hover {
+  background-color: transparent !important;
+}
+
+.response-window-light #minimizeResponseWindow:hover svg {
+  transform: scale(1.1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Dark variant hover for minimize button - only SVG scales and brightens */
+.response-window-dark #minimizeResponseWindow:hover {
+  background-color: transparent !important;
+}
+
+.response-window-dark #minimizeResponseWindow:hover svg {
+  transform: scale(1.1);
+  color: white !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Book Session Button Styles */
+.response-window-light .book-session-button {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ========================================
+   MOBILE RESPONSIVENESS
+   ======================================== */
+
+@media (max-width: 768px) {
+
+  /* Response Window - Mobile (keep same layout, just ensure it works) */
+  #responseWindow {
+    /* Keep original layout - just ensure mobile compatibility */
+    max-width: 100vw !important;
+    width: min(720px, 100vw) !important;
+  }
+
+  /* Response Header - Mobile */
+  .response-header {
+    padding: 0.75rem 1rem !important;
+  }
+
+  .response-header>div {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    min-width: 0 !important;
+  }
+
+  .response-question {
+    font-size: 1rem !important;
+    line-height: 1.5rem !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+    min-width: 0 !important;
+    max-width: calc(100% - 100px) !important;
+    flex: 1 1 0% !important;
+  }
+
+  /* Input Container - Mobile */
+  .input-container {
+    width: calc(100vw - 2rem) !important;
+    max-width: none !important;
+    padding: 6px !important;
+    margin: 0 auto !important;
+    box-sizing: border-box !important;
+  }
+
+  .input-content {
+    width: calc(100% - 80px) !important;
+  }
+
+  .input-icon svg {
+    width: 16px !important;
+    height: 16px !important;
+  }
+
+  .input-text {
+    font-size: 16px !important;
+  }
+
+  /* Input Bar Buttons - Mobile */
+  .input-bar-buttons {
+    gap: 4px !important;
+  }
+
+  #notifyButton {
+    width: 32px !important;
+    height: 32px !important;
+  }
+
+  #notifyButton svg {
+    width: 20px !important;
+    height: 20px !important;
+  }
+
+  .input-button {
+    width: 32px !important;
+    height: 32px !important;
+  }
+
+  .input-button svg {
+    width: 12px !important;
+    height: 12px !important;
+  }
+
+  /* Hot Questions - Mobile */
+  #hotQuestionsContainer {
+    width: calc(100vw - 2rem) !important;
+    max-width: none !important;
+    margin: 0 auto !important;
+    padding: 0.75rem !important;
+    box-sizing: border-box !important;
+  }
+
+  .question-item {
+    padding: 0.5rem !important;
+    gap: 0.5rem !important;
+  }
+
+  .question-item svg {
+    width: 1rem !important;
+    height: 1rem !important;
+  }
+
+  .question-item span {
+    font-size: 0.8rem !important;
+  }
+
+  /* Response Content - Mobile */
+  #responseScrollContainer {
+    padding: 0.75rem !important;
+    padding-bottom: 4rem !important;
+  }
+
+  /* Related Content Cards - Mobile (One per row) */
+  #responseRelatedCards {
+    grid-template-columns: 1fr !important;
+    gap: 0.75rem !important;
+    justify-items: stretch !important;
+  }
+
+  .resource-card {
+    max-width: none !important;
+    width: 100% !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Override any inline grid styles on mobile */
+  #responseRelatedCards {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 0.75rem !important;
+    justify-items: stretch !important;
+    width: 100% !important;
+  }
+
+  /* Related Questions - Mobile */
+  .question-item {
+    padding: 0.75rem !important;
+  }
+
+  .question-item svg {
+    width: 1.125rem !important;
+    height: 1.125rem !important;
+  }
+
+  .question-item span {
+    font-size: 0.875rem !important;
+  }
+
+  /* Book Session Button - Mobile */
+  .book-session-button {
+    padding: 0.75rem 1.5rem !important;
+    font-size: 0.875rem !important;
+  }
+
+  /* Response Window Variants - Mobile */
+  .response-window-light {
+    background: rgba(255, 255, 255, 0.95) !important;
+  }
+
+  .response-window-dark {
+    background: rgba(0, 0, 0, 0.9) !important;
+  }
+}
+
+@media (max-width: 480px) {
+
+  /* Extra small screens */
+  .response-header {
+    padding: 0.5rem 0.75rem !important;
+  }
+
+  .response-header>div {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    min-width: 0 !important;
+  }
+
+  .response-question {
+    font-size: 0.9rem !important;
+    line-height: 1.4rem !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+    min-width: 0 !important;
+    max-width: calc(100% - 80px) !important;
+    flex: 1 1 0% !important;
+  }
+
+  .input-container {
+    width: calc(100vw - 1rem) !important;
+    padding: 4px !important;
+  }
+
+  .input-content {
+    width: calc(100% - 70px) !important;
+  }
+
+  .input-text {
+    font-size: 14px !important;
+  }
+
+  #notifyButton,
+  .input-button {
+    width: 30px !important;
+    height: 28px !important;
+  }
+
+  #notifyButton svg {
+    width: 20px !important;
+    height: 20px !important;
+  }
+
+  .input-button svg {
+    width: 10px !important;
+    height: 10px !important;
+  }
+
+  #responseScrollContainer {
+    padding: 0.5rem !important;
+    padding-bottom: 3rem !important;
+  }
+
+  .question-item {
+    padding: 0.5rem !important;
+  }
+
+  .question-item span {
+    font-size: 0.75rem !important;
+  }
+}
+
+.response-window-light .book-session-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px -10px rgba(0, 0, 0, .15);
+}
+
+/* Light variant related questions hover */
+.response-window-light .question-item:hover {
+  background-color: rgb(243 244 246);
+}
+
+/* Dark variant book button - make it visible and add hover effect */
+.response-window-dark .book-session-button {
+  background-image: url('/assets/inputbar-gradient.webp');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 60px rgba(62, 36, 135, .4), -5px 5px 15px rgba(85, 22, 84, .2);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.response-window-dark .book-session-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px -10px rgba(0, 0, 0, .15);
+}
+
+/* Dark variant related questions hover */
+.response-window-dark .question-item:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Remove inline color from response content div */
+.response-content div {
+  color: inherit !important;
+}
+
+/* Input button border removal */
+.input-button {
+  border: none !important;
+  outline: none !important;
+}
+
+/* Response window shadows for both variants */
+.response-window-light {
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 10px 20px -5px rgba(0, 0, 0, 0.1) !important;
+}
+
+.response-window-dark {
+  box-shadow: 20px 10px 60px rgba(62, 36, 135, .6), -12px 4px 20px rgba(85, 22, 84, .3), 0 25px 50px -12px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Hot Questions Variant Styles */
+.hot-questions-light {
+  background-color: #ffffff !important;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+.hot-questions-dark {
+  background-color: rgba(0, 0, 0, 0.8) !important;
+  box-shadow: 20px 10px 60px rgba(62, 36, 135, .6), -12px 4px 20px rgba(85, 22, 84, .3) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+}
+
+.hot-questions-light .question-item span {
+  color: #1F2937 !important;
+}
+
+.hot-questions-dark .question-item span {
+  color: rgb(229 231 235) !important;
+}
+
+.hot-questions-light .question-item:hover {
+  background-color: rgb(243 244 246) !important;
+}
+
+/* Card text colors for light variant */
+.card-light {
+  background-color: #ffffff !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+.card-light span,
+.card-light p,
+.card-light div,
+.card-light h1,
+.card-light h2,
+.card-light h3,
+.card-light h4,
+.card-light h5,
+.card-light h6,
+.card-light * {
+  color: #282828 !important;
+}
+
+.card-dark {
+  background-color: rgba(0, 0, 0, 0.8) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+.card-dark span,
+.card-dark p,
+.card-dark div,
+.card-dark h1,
+.card-dark h2,
+.card-dark h3,
+.card-dark h4,
+.card-dark h5,
+.card-dark h6,
+.card-dark * {
+  color: #ffffff !important;
+}
+
+/* Override response window conflicting rules */
+.response-window-light .card-light,
+.response-window-light .resource-card,
+.response-window-light .question-card,
+.response-window-light .character-generation,
+.response-window-light .related-questions,
+.response-window-light .cards-section {
+  background-color: #ffffff !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+.response-window-light .card-light span,
+.response-window-light .card-light p,
+.response-window-light .card-light div,
+.response-window-light .card-light *,
+.response-window-light .resource-card span,
+.response-window-light .resource-card p,
+.response-window-light .resource-card div,
+.response-window-light .resource-card *,
+.response-window-light .question-card span,
+.response-window-light .question-card p,
+.response-window-light .question-card div,
+.response-window-light .question-card * {
+  color: #282828 !important;
+}
+
+.response-window-dark .card-dark,
+.response-window-dark .resource-card,
+.response-window-dark .question-card,
+.response-window-dark .character-generation,
+.response-window-dark .related-questions,
+.response-window-dark .cards-section {
+  background-color: rgba(0, 0, 0, 0.8) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+.response-window-dark .card-dark span,
+.response-window-dark .card-dark p,
+.response-window-dark .card-dark div,
+.response-window-dark .card-dark *,
+.response-window-dark .resource-card span,
+.response-window-dark .resource-card p,
+.response-window-dark .resource-card div,
+.response-window-dark .resource-card *,
+.response-window-dark .question-card span,
+.response-window-dark .question-card p,
+.response-window-dark .question-card div,
+.response-window-dark .question-card * {
+  color: #ffffff !important;
+}
+
+.hot-questions-dark .question-item:hover {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Button text colors for variants */
+.button-light {
+  background-color: #ffffff !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+.button-light span,
+.button-light p,
+.button-light div,
+.button-light * {
+  color: #282828 !important;
+}
+
+.button-dark {
+  background-color: rgba(0, 0, 0, 0.8) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+.button-dark span,
+.button-dark p,
+.button-dark div,
+.button-dark * {
+  color: #ffffff !important;
+}
+
+/* Modal text colors for variants */
+.modal-light {
+  background-color: #ffffff !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+.modal-light span,
+.modal-light p,
+.modal-light div,
+.modal-light * {
+  color: #282828 !important;
+}
+
+.modal-dark {
+  background-color: rgba(0, 0, 0, 0.8) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+.modal-dark span,
+.modal-dark p,
+.modal-dark div,
+.modal-dark * {
+  color: #ffffff !important;
+}
+
+/* Tooltip text colors for variants */
+.tooltip-light {
+  background-color: #ffffff !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+.tooltip-light span,
+.tooltip-light p,
+.tooltip-light div,
+.tooltip-light * {
+  color: #282828 !important;
+}
+
+.tooltip-dark {
+  background-color: rgba(0, 0, 0, 0.8) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+.tooltip-dark span,
+.tooltip-dark p,
+.tooltip-dark div,
+.tooltip-dark * {
+  color: #ffffff !important;
+}
+
+/* Text-specific component variants */
+.text-light {
+  background-color: #ffffff !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+.text-light span,
+.text-light p,
+.text-light div,
+.text-light * {
+  color: #282828 !important;
+}
+
+.text-dark {
+  background-color: rgba(0, 0, 0, 0.8) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+.text-dark span,
+.text-dark p,
+.text-dark div,
+.text-dark * {
+  color: #ffffff !important;
+}
+
+/* Content-specific component variants */
+.content-light {
+  background-color: #ffffff !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+.content-light span,
+.content-light p,
+.content-light div,
+.content-light * {
+  color: #282828 !important;
+}
+
+.content-dark {
+  background-color: rgba(0, 0, 0, 0.8) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+.content-dark span,
+.content-dark p,
+.content-dark div,
+.content-dark * {
+  color: #ffffff !important;
+}
+
+/* Item-specific component variants */
+.item-light {
+  background-color: #ffffff !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+.item-light span,
+.item-light p,
+.item-light div,
+.item-light * {
+  color: #282828 !important;
+}
+
+.item-dark {
+  background-color: rgba(0, 0, 0, 0.8) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+.item-dark span,
+.item-dark p,
+.item-dark div,
+.item-dark * {
+  color: #ffffff !important;
+}
+
+/* Question-specific component variants */
+.question-light {
+  background-color: #ffffff !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+.question-light span,
+.question-light p,
+.question-light div,
+.question-light * {
+  color: #282828 !important;
+}
+
+.question-dark {
+  background-color: rgba(0, 0, 0, 0.8) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+.question-dark span,
+.question-dark p,
+.question-dark div,
+.question-dark * {
+  color: #ffffff !important;
+}
+
+/* Answer-specific component variants */
+.answer-light {
+  background-color: #ffffff !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+.answer-light span,
+.answer-light p,
+.answer-light div,
+.answer-light * {
+  color: #282828 !important;
+}
+
+.answer-dark {
+  background-color: rgba(0, 0, 0, 0.8) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+.answer-dark span,
+.answer-dark p,
+.answer-dark div,
+.answer-dark * {
+  color: #ffffff !important;
+}
+
+/* Message-specific component variants */
+.message-light {
+  background-color: #ffffff !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+.message-light span,
+.message-light p,
+.message-light div,
+.message-light * {
+  color: #282828 !important;
+}
+
+.message-dark {
+  background-color: rgba(0, 0, 0, 0.8) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+.message-dark span,
+.message-dark p,
+.message-dark div,
+.message-dark * {
+  color: #ffffff !important;
+}
+
+/* Input and Response Window Input Styles */
+.response-window-dark input,
+.response-window-light input {
+  border-color: rgba(255, 255, 255, .2);
+  border-radius: 4px;
+}
+
+.response-window-dark input {
+  background: rgba(255, 255, 255, .1);
+  color: #f8fafc;
+}
+
+.response-window-light input {
+  background: rgba(0, 0, 0, .05);
+  color: #374151;
+  border-color: rgba(0, 0, 0, .1);
+}
+
+/* Scrollbar Styles */
+.response-window-dark::-webkit-scrollbar {
+  width: 8px;
+}
+
+.response-window-dark::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, .2);
+  border-radius: 4px;
+}
+
+.response-window-dark::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, .3);
+}
+
+.response-window-dark {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, .2) transparent;
+}
+
+/* Enhanced HTML Response Formatting */
+#responseMessages h2 {
+  font-size: 1.05rem;
+  font-weight: 550;
+  margin: 1.5rem 0 1rem 0;
+  color: #1e293b;
+  line-height: 1.3;
+}
+
+#responseMessages h3 {
+  font-size: 0.88rem;
+  font-weight: 550;
+  margin: 1.25rem 0 0.75rem 0;
+  color: #374151;
+  line-height: 1.4;
+}
+
+#responseMessages p {
+  margin: 0.7rem 0;
+  line-height: 1.7;
+  color: #475569;
+}
+
+#responseMessages ul {
+  margin: 0.7rem 0;
+  padding-left: 1.5rem;
+}
+
+#responseMessages li {
+  margin: 0.5rem 0;
+  line-height: 1.6;
+  color: #475569;
+}
+
+#responseMessages strong {
+  font-weight: 300;
+  color: #1e293b;
+}
+
+/* Dark Variant Enhanced HTML Response Formatting */
+.response-window-dark #responseMessages h2 {
+  color: #f8fafc;
+}
+
+.response-window-dark #responseMessages h3 {
+  color: #e2e8f0;
+}
+
+.response-window-dark #responseMessages p {
+  color: #e2e8f0;
+}
+
+.response-window-dark #responseMessages li {
+  color: #e2e8f0;
+}
+
+.response-window-dark #responseMessages strong {
+  color: #f1f5f9;
+}
+
+/* Dark Variant Response Messages */
+.response-window-dark #responseMessages h1,
+.response-window-dark #responseMessages h2,
+.response-window-dark #responseMessages h3,
+.response-window-dark #responseMessages h4,
+.response-window-dark #responseMessages h5,
+.response-window-dark #responseMessages h6 {
+  color: #f8fafc;
+}
+
+.response-window-dark #responseMessages p {
+  color: #e2e8f0;
+}
+
+.response-window-dark #responseMessages li {
+  color: #e2e8f0;
+}
+
+.response-window-dark #responseMessages code {
+  background: #374151;
+  color: #fbbf24;
+}
+
+.response-window-dark #responseMessages strong,
+.response-window-dark #responseMessages b {
+  color: #f1f5f9;
+}
+
+/* Light theme links */
+.response-window-light #responseMessages a {
+  color: var(--light-svg-color);
+  text-decoration: underline;
+}
+
+.response-window-light #responseMessages a:visited {
+  color: var(--light-svg-color);
+  opacity: 0.8;
+}
+
+.response-window-light #responseMessages a:hover {
+  color: var(--light-svg-color);
+  opacity: 1;
+  text-decoration: underline;
+}
+
+/* Dark theme links */
+.response-window-dark #responseMessages a {
+  color: var(--dark-svg-color);
+  text-decoration: underline;
+}
+
+.response-window-dark #responseMessages a:visited {
+  color: var(--dark-svg-color);
+  opacity: 0.8;
+}
+
+.response-window-dark #responseMessages a:hover {
+  color: var(--dark-svg-color);
+  opacity: 1;
+  text-decoration: underline;
+}
+
+.response-window-dark #responseQuestion {
+  color: #f8fafc;
+}
+
+.response-window-dark #closeResponseWindow {
+  color: #e2e8f0;
+}
+
+.response-window-dark #closeResponseWindow:hover {
+  color: #f8fafc;
+}
+
+/* Resource Cards */
+.resource-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid #e2e8f0;
+}
+
+.resource-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px -10px rgba(0, 0, 0, .15);
+  border-color: #cbd5e1;
+}
+
+.response-window-dark .bg-white,
+.response-window-dark .resource-card,
+.response-window-dark .question-card,
+.response-window-dark .character-generation,
+.response-window-dark .related-questions,
+.response-window-dark .cards-section {
+  background: transparent !important;
+}
+
+.response-window-dark .resource-card:hover,
+.response-window-dark .question-card:hover {
+  background: rgba(255, 255, 255, .05) !important;
+  border-color: rgba(255, 255, 255, .2) !important;
+  box-shadow: 20px 10px 60px rgba(62, 36, 135, .6), -12px 4px 20px rgba(85, 22, 84, .3) !important;
+}
+
+.response-window-dark .resource-card h4 {
+  color: #f8fafc;
+}
+
+.response-window-dark .resource-card p {
+  color: #e2e8f0;
+}
+
+.response-window-dark .resource-card span {
+  color: #60a5fa;
+}
+
+/* Related Questions */
+.response-window-dark #responseRelatedQuestions h3 {
+  color: #f8fafc;
+}
+
+.response-window-dark .question-item span {
+  color: #e2e8f0 !important;
+}
+
+.response-window-dark .question-item svg {
+  color: #60a5fa;
+}
+
+.response-window-dark #responseRelatedContent h3 {
+  color: #f8fafc !important;
+}
+
+.response-window-dark #responseRelatedQuestions h3 {
+  color: #f8fafc !important;
+}
+
+.response-window-dark #responseQuestionsList .question-item span {
+  color: #f8fafc !important;
+}
+
+.response-window-dark #responseQuestionsList .question-item svg {
+  color: #60a5fa !important;
+}
+
+/* Hover Effects */
+.related-question-hover-light:hover {
+  background: rgba(0, 0, 0, .05) !important;
+}
+
+.related-question-hover-dark:hover,
+.response-window-dark .question-item:hover,
+.response-window-dark #responseMessages .question-item:hover,
+.response-window-dark .flex.items-center.gap-3.p-3.rounded-lg.cursor-pointer.transition-colors:hover {
+  background: rgba(255, 255, 255, .05) !important;
+  border-color: rgba(255, 255, 255, .2) !important;
+}
