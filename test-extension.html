@@ -99,8 +99,8 @@
     <!-- Sidebar Wrapper -->
     <div class="sidebar">
         <!-- The Actual React Extension -->
-        <!-- Note: Pointing to localhost:5173 to ensure we hit the Vite server even if this file is opened on port 5500 -->
-        <iframe id="extension-frame" src="http://localhost:5173/extension.html"></iframe>
+        <!-- Note: Using relative path for production compatibility -->
+        <iframe id="extension-frame" src="/extension.html"></iframe>
     </div>
 
     <!-- Preview Area -->
@@ -114,7 +114,7 @@
         </div>
         <div class="preview" id="preview-area">
             <!-- The Widget Canvas -->
-            <iframe id="widget-frame" src="http://localhost:5173/widget"></iframe>
+            <iframe id="widget-frame" src="/index.html?mode=widget"></iframe>
         </div>
     </div>
 
