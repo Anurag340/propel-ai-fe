@@ -9,7 +9,7 @@ export const Dashboard = () => {
     // Base URL for Backend API
     // - Development: '' (Proxies to localhost via Vite)
     // - Production: 'https://propelwebsiteagent-h2hcc0cae9a6eqdp.centralindia-01.azurewebsites.net' (Azure)
-    const API_BASE = import.meta.env.VITE_API_BASE || ''; 
+    const API_BASE = import.meta.env.VITE_API_BASE || '';
 
     // Initialize state
     useEffect(() => {
@@ -31,7 +31,7 @@ export const Dashboard = () => {
                 setIsConnected(true);
             }
         }
-        
+
         const savedEnabled = localStorage.getItem('propel_widget_enabled');
         if (savedEnabled === 'true') setIsEnabled(true);
 
@@ -76,7 +76,8 @@ export const Dashboard = () => {
             });
 
             if (!response.ok) {
-                throw new Error('API request failed');
+                const errorData = await response.json();
+                throw new Error(errorData.detail || 'API request failed');
             }
 
             // Success (or Mock Success)
@@ -84,9 +85,9 @@ export const Dashboard = () => {
             localStorage.setItem('propel_widget_enabled', String(newState));
             window.dispatchEvent(new Event('storage')); // Sync other tabs
 
-        } catch (error) {
+        } catch (error: any) {
             console.error('Failed to toggle widget:', error);
-            alert('Failed to update widget status on the server.');
+            alert(`Failed: ${error.message}`);
         } finally {
             setIsLoading(false);
         }
