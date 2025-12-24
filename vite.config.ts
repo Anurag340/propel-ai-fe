@@ -9,6 +9,7 @@ export default defineConfig({
       input: {
         main: './index.html',
         extension: './extension.html',
+        test_extension: './test-extension.html',
         embed: './src/embed.ts'
       },
       output: {
