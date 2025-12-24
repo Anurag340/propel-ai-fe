@@ -38,11 +38,15 @@ export const MessageService = {
                 country: countryCode
             };
 
+            const apiKey = import.meta.env.VITE_API_KEY || '';
+            console.log('[Debug] Chat Request - Host:', API_URL);
+            console.log('[Debug] Chat Request - Key Status:', apiKey ? `Present (starts with ${apiKey.substring(0, 3)}...)` : 'MISSING');
+
             const response = await fetch(`${API_URL}/chat/stream`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-API-Key': import.meta.env.VITE_API_KEY || ''
+                    'X-API-Key': apiKey
                 },
                 body: JSON.stringify(payload),
                 signal // Allow aborting (e.g., navigation safety)
