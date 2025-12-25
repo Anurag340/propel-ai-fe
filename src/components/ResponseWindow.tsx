@@ -61,7 +61,9 @@ export const ResponseWindow = () => {
                 width: layout.width || '720px',
                 height: layout.height || '80vh',
                 transform: transformStyle,
-                transition: 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+                // Fix Flicker: Delay visibility hidden until transform completes
+                visibility: isOpen ? 'visible' : 'hidden',
+                transition: `transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), visibility 0s linear ${isOpen ? '0s' : '0.4s'}`,
                 overflow: 'hidden',
                 backgroundColor: styles.background_value,
                 color: styles.text_color

@@ -78,8 +78,8 @@ export const SearchBar = ({ children }: { children?: React.ReactNode }) => {
                 <div className="input-icon"
                     style={{ width: config.icons.layout.search_icon_size, height: config.icons.layout.search_icon_size, display: 'flex', alignItems: 'center', justifyContent: 'center', color: iconColor }}>
                     {isProcessing ? (
-                        /* Loader Icon */
-                        <div style={{ width: '100%', height: '100%', display: 'flex' }} dangerouslySetInnerHTML={{ __html: DEFAULT_SVG_CONFIG.loader_icon.svg }} />
+                        /* Loader Icon - Ensure animate-spin is on container for robust rotation */
+                        <div className="animate-spin" style={{ width: '100%', height: '100%', display: 'flex' }} dangerouslySetInnerHTML={{ __html: DEFAULT_SVG_CONFIG.loader_icon.svg }} />
                     ) : isConversationActive ? (
                         /* Pencil Icon */
                         <div style={{ width: '100%', height: '100%', display: 'flex' }} dangerouslySetInnerHTML={{ __html: DEFAULT_SVG_CONFIG.pencil_icon.svg }} />
