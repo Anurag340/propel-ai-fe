@@ -1,5 +1,5 @@
 import { marked } from 'marked';
-import { useMemo, useEffect } from 'react';
+import { useMemo, useEffect, useState } from 'react';
 import { Cards, RelatedQuestions } from './Cards';
 import { LoadingAnimation } from './LoadingAnimation';
 import { useAppStore } from '../stores/useAppStore';
@@ -19,7 +19,6 @@ export const ResponseWindow = () => {
     const markResponseRead = useAppStore(state => state.markResponseRead);
     const resetSearch = useAppStore(state => state.resetSearch);
 
-    // Effect: Mark as read when window is visible
     // Effect: Mark as read when window is visible
     useEffect(() => {
         if (isOpen && !isMinimized && !isStreaming) {
@@ -42,31 +41,62 @@ export const ResponseWindow = () => {
     const minimizeColor = icons.minimize_icon_color || styles.text_color;
     const closeColor = icons.close_icon_color || styles.text_color;
 
-    const transformStyle = isOpen && !isMinimized
+    // Precise Animation State Machine (Matches Legacy index.js behavior)
+    // 1. Mounts with display:flex but off-screen
+    // 2. Animates in
+    // 3. Animates out
+    // 4. Unmounts (display:none) to prevent resize glitches
+    const [shouldRender, setShouldRender] = useState(isOpen);
+    const [animateIn, setAnimateIn] = useState(false);
+
+    useEffect(() => {
+        let timeout: any;
+        if (isOpen) {
+            setShouldRender(true);
+            // Double RAF to ensure DOM update (display:flex) happens before transform
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    setAnimateIn(true);
+                });
+            });
+        } else {
+            setAnimateIn(false);
+            // Wait for CSS transition (400ms) to complete before hiding
+            timeout = setTimeout(() => {
+                setShouldRender(false);
+            }, 400);
+        }
+        return () => clearTimeout(timeout);
+    }, [isOpen]);
+
+    const transformStyle = animateIn
         ? 'translateX(-50%) translateY(0)'
         : 'translateX(-50%) translateY(100%)';
 
+    const renderStyle = {
+        display: shouldRender ? 'flex' : 'none',
+        // Ensure it is physically hidden if not rendering, redundant safety
+        visibility: shouldRender ? 'visible' : 'hidden'
+    };
+
     return (
-        <div id="responseWindow"
+        <div id="responseWindow" className={`response-window-${theme} ${!isOpen ? 'pointer-events-none' : ''}`}
             style={{
-                display: 'flex',
                 position: 'fixed',
                 bottom: 0,
                 left: '50%',
                 zIndex: 30,
                 flexDirection: 'column',
-                borderTopLeftRadius: layout.border_radius || '0.375rem',
-                borderTopRightRadius: layout.border_radius || '0.375rem',
-                boxShadow: styles.shadow_value || '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+                borderTopLeftRadius: '0.375rem',
+                borderTopRightRadius: '0.375rem',
                 width: layout.width || '720px',
                 height: layout.height || '80vh',
                 transform: transformStyle,
-                // Fix Flicker: Delay visibility hidden until transform completes
-                visibility: isOpen ? 'visible' : 'hidden',
-                transition: `transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), visibility 0s linear ${isOpen ? '0s' : '0.4s'}`,
+                transition: 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
                 overflow: 'hidden',
                 backgroundColor: styles.background_value,
-                color: styles.text_color
+                color: styles.text_color,
+                ...renderStyle as any
             }}>
 
             {/* Response Container */}
