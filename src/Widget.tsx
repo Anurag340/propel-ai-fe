@@ -65,12 +65,35 @@ export const Widget = () => {
         };
     }, [detectInitialTheme, initializeSession, setFullConfig, resetConfig, setFocusedComponent]);
 
+    const isOpen = useAppStore(state => state.isOpen);
+
     useEffect(() => {
         if (isStreaming) {
             setOpen(true);
         }
         return UIService.setupNavigationSafety(isStreaming);
     }, [isStreaming, setOpen]);
+
+    // Resize Logic (Communicates with embed.ts)
+    useEffect(() => {
+        try {
+            if (isOpen) {
+                // Expanded State
+                window.parent.postMessage({
+                    type: 'PROPEL_RESIZE',
+                    width: '100vw',  // Or '450px' if we want a bounded window
+                    height: '100vh'  // Cover screen (so clicks outside can close if implemented, or just safely overlay)
+                }, '*');
+
+                window.parent.postMessage({ type: 'PROPEL_RESIZE', width: '450px', height: '85vh' }, '*');
+            } else {
+                // Collapsed State (Launcher only)
+                window.parent.postMessage({ type: 'PROPEL_RESIZE', width: '100px', height: '100px' }, '*');
+            }
+        } catch (e) {
+            console.error("Failed to post resize message", e);
+        }
+    }, [isOpen]);
 
 
     const bottomPanelStyle = {

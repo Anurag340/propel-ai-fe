@@ -37,15 +37,29 @@
 
     // Styles to make it a transparent overlay
     iframe.style.position = 'fixed';
-    iframe.style.bottom = '0';
-    iframe.style.right = '0';
-    iframe.style.width = '100vw'; // Full width to allow centered/side positioning
-    iframe.style.height = '100vh'; // Full height for overlay
+    iframe.style.bottom = '20px';
+    iframe.style.right = '20px';
+    // Start Small (Launcher Button Only) - React will resize us when opened
+    iframe.style.width = '100px';
+    iframe.style.height = '100px';
     iframe.style.border = 'none';
     iframe.style.zIndex = '99999999';
-    iframe.style.pointerEvents = 'none'; // Click-through by default
+    iframe.style.pointerEvents = 'auto'; // Must be auto to click the button!
     iframe.style.background = 'transparent';
-    iframe.allow = 'clipboard-read; clipboard-write'; // Allow copy-paste
+    iframe.style.transition = 'width 0.3s ease, height 0.3s ease'; // Smooth resize
+    iframe.allow = 'clipboard-read; clipboard-write';
+
+    // Listen for Resize Messages from Widget
+    window.addEventListener('message', function (event) {
+        // Security check: typically check origin, but here we expect our own widget
+        if (event.data && event.data.type === 'PROPEL_RESIZE') {
+            if (event.data.width) google_iframe.style.width = event.data.width;
+            if (event.data.height) google_iframe.style.height = event.data.height;
+        }
+    });
+
+    // Helper ref
+    var google_iframe = iframe;
 
     // Append to body
     if (document.body) {
