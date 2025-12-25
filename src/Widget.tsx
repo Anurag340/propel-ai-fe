@@ -83,35 +83,45 @@ export const Widget = () => {
     const isHotQuestionsVisible = focusedComponent === 'hot_questions' || (isInputFocused && !isStreaming && !answerHtml);
 
     // Resize Logic (Communicates with embed.ts)
+    // Resize Logic (Communicates with embed.ts)
     useEffect(() => {
-        try {
-            if (isOpen) {
-                // Expanded State: Full Window (Answer Visible)
-                // Use 95vh to ensure the 80vh window + shadows + book button fit comfortably
-                window.parent.postMessage({
-                    type: 'PROPEL_RESIZE',
-                    width: '800px',
-                    height: '95vh'
-                }, '*');
-            } else if (isHotQuestionsVisible) {
-                // Intermediate State: Search Focused + Hot Questions Visible
-                // Needs enough space for the list (approx 300-400px) + Input Bar
-                window.parent.postMessage({
-                    type: 'PROPEL_RESIZE',
-                    width: '800px',
-                    height: '600px'
-                }, '*');
-            } else {
-                // Collapsed State: Bottom Strip Only
-                window.parent.postMessage({
-                    type: 'PROPEL_RESIZE',
-                    width: '800px',
-                    height: '160px'
-                }, '*');
+        const resize = () => {
+            try {
+                if (isOpen) {
+                    // Expanded State: Full Window (Answer Visible)
+                    // Use 95vh to ensure the 80vh window + shadows + book button fit comfortably
+                    window.parent.postMessage({
+                        type: 'PROPEL_RESIZE',
+                        width: '800px',
+                        height: '95vh'
+                    }, '*');
+                } else if (isHotQuestionsVisible) {
+                    // Intermediate State: Search Focused + Hot Questions Visible
+                    // Needs enough space for the list (approx 300-400px) + Input Bar
+                    window.parent.postMessage({
+                        type: 'PROPEL_RESIZE',
+                        width: '800px',
+                        height: '600px'
+                    }, '*');
+                } else {
+                    // Collapsed State: Bottom Strip Only
+                    window.parent.postMessage({
+                        type: 'PROPEL_RESIZE',
+                        width: '800px',
+                        height: '160px'
+                    }, '*');
+                }
+            } catch (e) {
+                console.error("Failed to post resize message", e);
             }
-        } catch (e) {
-            console.error("Failed to post resize message", e);
-        }
+        };
+
+        // Debounce Resize Message to prevent "Phantom Expansion" (Glitchy Effect)
+        // If state flickers (Focus -> Blur) rapidly, we avoid resizing the iframe.
+        // 60ms is slightly longer than the component render debounce (50ms).
+        const timer = setTimeout(resize, 60);
+
+        return () => clearTimeout(timer);
     }, [isOpen, isHotQuestionsVisible]);
 
 
