@@ -37,24 +37,30 @@
 
     // Styles to make it a transparent overlay
     iframe.style.position = 'fixed';
-    iframe.style.bottom = '20px';
-    iframe.style.right = '20px';
-    // Start Small (Launcher Button Only) - React will resize us when opened
-    iframe.style.width = '100px';
-    iframe.style.height = '100px';
+    iframe.style.bottom = '0';
+    iframe.style.left = '50%'; // Center horizontally
+    iframe.style.transform = 'translateX(-50%)'; // Center pivot
+
+    // Start Bounded (Centered Strip)
+    iframe.style.width = '800px'; // Wide enough for window (720px) + margins
+    iframe.style.maxWidth = '100vw'; // Responsive support
+    iframe.style.height = '160px'; // Height of Search Bar area
+
     iframe.style.border = 'none';
     iframe.style.zIndex = '99999999';
-    iframe.style.pointerEvents = 'auto'; // Must be auto to click the button!
+    iframe.style.pointerEvents = 'auto';
     iframe.style.background = 'transparent';
-    iframe.style.transition = 'width 0.3s ease, height 0.3s ease'; // Smooth resize
+    iframe.style.transition = 'height 0.3s ease'; // Smooth resize (Width is static mostly)
     iframe.allow = 'clipboard-read; clipboard-write';
 
     // Listen for Resize Messages from Widget
     window.addEventListener('message', function (event) {
         // Security check: typically check origin, but here we expect our own widget
         if (event.data && event.data.type === 'PROPEL_RESIZE') {
-            if (event.data.width) google_iframe.style.width = event.data.width;
+            // We mainly resize height. Width stays 800px (or 100vw on mobile).
             if (event.data.height) google_iframe.style.height = event.data.height;
+            // Allow width overrides if needed, but default is stable
+            if (event.data.width) google_iframe.style.width = event.data.width;
         }
     });
 

@@ -78,17 +78,19 @@ export const Widget = () => {
     useEffect(() => {
         try {
             if (isOpen) {
-                // Expanded State
+                // Expanded State: Match Bounded Iframe Strategy
                 window.parent.postMessage({
                     type: 'PROPEL_RESIZE',
-                    width: '100vw',  // Or '450px' if we want a bounded window
-                    height: '100vh'  // Cover screen (so clicks outside can close if implemented, or just safely overlay)
+                    width: '800px',
+                    height: '85vh'
                 }, '*');
-
-                window.parent.postMessage({ type: 'PROPEL_RESIZE', width: '450px', height: '85vh' }, '*');
             } else {
-                // Collapsed State (Launcher only)
-                window.parent.postMessage({ type: 'PROPEL_RESIZE', width: '100px', height: '100px' }, '*');
+                // Collapsed State: Bottom Strip
+                window.parent.postMessage({
+                    type: 'PROPEL_RESIZE',
+                    width: '800px',
+                    height: '160px' // Enough for Input Bar + Hot Questions (if they were visible, but they expand up)
+                }, '*');
             }
         } catch (e) {
             console.error("Failed to post resize message", e);
