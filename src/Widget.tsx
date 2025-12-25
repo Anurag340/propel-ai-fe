@@ -75,27 +75,44 @@ export const Widget = () => {
     }, [isStreaming, setOpen]);
 
     // Resize Logic (Communicates with embed.ts)
+    // State for Hot Questions visibility logic (Matches HotQuestions.tsx)
+    const isInputFocused = useAppStore(state => state.isInputFocused);
+    const answerHtml = useAppStore(state => state.answerHtml);
+    // focusedComponent is already declared above, so we don't redeclare it here.
+    // Explicitly derive "Hot Questions Visible" state
+    const isHotQuestionsVisible = focusedComponent === 'hot_questions' || (isInputFocused && !isStreaming && !answerHtml);
+
+    // Resize Logic (Communicates with embed.ts)
     useEffect(() => {
         try {
             if (isOpen) {
-                // Expanded State: Match Bounded Iframe Strategy
+                // Expanded State: Full Window (Answer Visible)
+                // Use 95vh to ensure the 80vh window + shadows + book button fit comfortably
                 window.parent.postMessage({
                     type: 'PROPEL_RESIZE',
                     width: '800px',
-                    height: '85vh'
+                    height: '95vh'
+                }, '*');
+            } else if (isHotQuestionsVisible) {
+                // Intermediate State: Search Focused + Hot Questions Visible
+                // Needs enough space for the list (approx 300-400px) + Input Bar
+                window.parent.postMessage({
+                    type: 'PROPEL_RESIZE',
+                    width: '800px',
+                    height: '600px'
                 }, '*');
             } else {
-                // Collapsed State: Bottom Strip
+                // Collapsed State: Bottom Strip Only
                 window.parent.postMessage({
                     type: 'PROPEL_RESIZE',
                     width: '800px',
-                    height: '160px' // Enough for Input Bar + Hot Questions (if they were visible, but they expand up)
+                    height: '160px'
                 }, '*');
             }
         } catch (e) {
             console.error("Failed to post resize message", e);
         }
-    }, [isOpen]);
+    }, [isOpen, isHotQuestionsVisible]);
 
 
     const bottomPanelStyle = {
