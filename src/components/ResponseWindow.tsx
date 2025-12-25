@@ -36,37 +36,38 @@ export const ResponseWindow = () => {
     const styles = config.response_window[theme];
     const layout = config.response_window.layout;
     const icons = config.icons[theme]; // Get icon colors
-
-    // Fallback if not yet in config (backward compat)
     const minimizeColor = icons.minimize_icon_color || styles.text_color;
     const closeColor = icons.close_icon_color || styles.text_color;
-
-    // Precise Animation State Machine (Matches Legacy index.js behavior)
-    // 1. Mounts with display:flex but off-screen
-    // 2. Animates in
-    // 3. Animates out
-    // 4. Unmounts (display:none) to prevent resize glitches
     const [shouldRender, setShouldRender] = useState(isOpen);
     const [animateIn, setAnimateIn] = useState(false);
 
     useEffect(() => {
         let timeout: any;
+        let openDelay: any;
+
         if (isOpen) {
-            setShouldRender(true);
-            // Double RAF to ensure DOM update (display:flex) happens before transform
-            requestAnimationFrame(() => {
+            // Debounce Opening: Wait 100ms to confirm it's a real open event, not a flicker
+            openDelay = setTimeout(() => {
+                setShouldRender(true);
+                // Double RAF to ensure DOM update (display:flex) happens before transform
                 requestAnimationFrame(() => {
-                    setAnimateIn(true);
+                    requestAnimationFrame(() => {
+                        setAnimateIn(true);
+                    });
                 });
-            });
+            }, 50); // 50ms buffer
         } else {
+            // Closing: Immediate cleanup trigger
             setAnimateIn(false);
             // Wait for CSS transition (400ms) to complete before hiding
             timeout = setTimeout(() => {
                 setShouldRender(false);
             }, 400);
         }
-        return () => clearTimeout(timeout);
+        return () => {
+            clearTimeout(timeout);
+            clearTimeout(openDelay);
+        };
     }, [isOpen]);
 
     const transformStyle = animateIn
