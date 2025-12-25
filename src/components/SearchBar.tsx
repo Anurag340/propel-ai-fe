@@ -100,8 +100,8 @@ export const SearchBar = ({ children }: { children?: React.ReactNode }) => {
                     onKeyDown={handleKeyDown}
                     onFocus={() => useAppStore.getState().setInputFocused(true)}
                     onBlur={() => {
-                        // Small delay to allow clicking on hot questions before they hide
-                        setTimeout(() => useAppStore.getState().setInputFocused(false), 200);
+                        // Delay hide to prevent resize-induced blur and allow clicks
+                        setTimeout(() => useAppStore.getState().setInputFocused(false), 350);
                     }}
                     style={{
                         backgroundColor: 'transparent',

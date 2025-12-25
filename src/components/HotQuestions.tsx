@@ -52,14 +52,18 @@ export const HotQuestions = () => {
 
     useEffect(() => {
         let timeout: any;
+        let openDelay: any;
+
         if (shouldBeVisible) {
-            setShouldRender(true);
-            // Slight delay to allow DOM render before starting transition
-            requestAnimationFrame(() => {
+            // Debounce Opening: Wait 50ms to confirm it's a real focus event
+            openDelay = setTimeout(() => {
+                setShouldRender(true);
                 requestAnimationFrame(() => {
-                    setAnimateVisible(true);
+                    requestAnimationFrame(() => {
+                        setAnimateVisible(true);
+                    });
                 });
-            });
+            }, 50);
         } else {
             setAnimateVisible(false);
             // Wait for transition to finish before unmounting
@@ -67,7 +71,10 @@ export const HotQuestions = () => {
                 setShouldRender(false);
             }, 300); // Matches CSS duration
         }
-        return () => clearTimeout(timeout);
+        return () => {
+            clearTimeout(timeout);
+            clearTimeout(openDelay);
+        };
     }, [shouldBeVisible]);
 
     const styles = config.hot_questions[theme];

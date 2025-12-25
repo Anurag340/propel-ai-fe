@@ -118,8 +118,8 @@ export const ResponseWindow = () => {
                                     textOverflow: 'ellipsis',
                                     whiteSpace: 'nowrap',
                                     width: '100%',
-                                    color: styles.text_color, // Explicit color from config
-                                    margin: 0                 // Reset default margins
+                                    color: styles.text_color,
+                                    margin: 0             
                                 }}>
                                 {query}
                             </h3>
