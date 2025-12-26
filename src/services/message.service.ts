@@ -35,7 +35,8 @@ export const MessageService = {
                 query: request.message,
                 chat_id: request.chat_id,
                 location: request.location,
-                country: countryCode
+                country: countryCode,
+                skip_logging: true
             };
 
             const apiKey = import.meta.env.VITE_API_KEY || '';
